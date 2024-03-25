@@ -43,16 +43,13 @@ public class PlanetMovement : MonoBehaviour
     void AttachToPlayer()
     {
         isAttached = true;
+        transform.SetParent(player.transform);
         initialOffset = transform.position - player.transform.position; // Update initial offset
     }
 
     void RotateAroundPlayer()
     {
-        // Rotate around the player's current position on the z-axis
         transform.RotateAround(player.transform.position, Vector3.forward, rotationSpeed * Time.deltaTime);
-
-        // Update position relative to the player's current position
-        transform.position = player.transform.position + initialOffset;
     }
 
     void ManageCircleTimer()
