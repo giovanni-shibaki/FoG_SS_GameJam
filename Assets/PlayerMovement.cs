@@ -9,20 +9,18 @@ public class PlayerMovement : MonoBehaviour
 {
     private float _speed = 5.0f;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
     // Update is called once per frame
     void Update()
     {
-        float horizontalInput = Input.GetAxis("Horizontal");
-        float verticalInput = Input.GetAxis("Vertical");
+        // Get the mouse position in screen coordinates
+        Vector3 mousePosition = Input.mousePosition;
 
-        Vector3 direction = new Vector3(horizontalInput, verticalInput, 0);
-        
-        transform.Translate(direction * _speed * Time.deltaTime);
+        // Convert the mouse position to world coordinates
+        Vector3 targetPosition = Camera.main.ScreenToWorldPoint(new Vector3(mousePosition.x, mousePosition.y, transform.position.z - Camera.main.transform.position.z));
+
+        // Move towards the mouse position
+        transform.position = Vector3.MoveTowards(transform.position, targetPosition, _speed * Time.deltaTime);
     }
+
+    public float getSpeed() { return _speed; }
 }
