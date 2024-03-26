@@ -1,6 +1,14 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
+public enum ResourceType
+{
+    Iron,
+    Gold,
+    Water
+}
 
 public class PlanetMovement : MonoBehaviour
 {
@@ -9,6 +17,7 @@ public class PlanetMovement : MonoBehaviour
     public float rotationSpeed = 30f; // Speed of rotation around the player
     public float circleInterval = 3f; // Interval between circle creation (in seconds)
     public GameObject circlePrefab; // Prefab of the circle object
+    public ResourceType resourceType;
 
     private bool isAttached = false;
     private Vector3 initialOffset;
@@ -69,5 +78,15 @@ public class PlanetMovement : MonoBehaviour
 
         // Set the circle's destination to the player's position
         circle.GetComponent<CircleMovement>().SetPlayer(player);
+
+        if(resourceType == ResourceType.Iron)
+        {
+            circle.tag = "Iron";
+        } else if (resourceType == ResourceType.Gold) {
+            circle.tag = "Gold";
+        } else
+        {
+            circle.tag = "Water";
+        }
     }
 }

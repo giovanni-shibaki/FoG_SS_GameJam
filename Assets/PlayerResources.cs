@@ -36,4 +36,10 @@ public class PlayerResources : MonoBehaviour
         // Destroy the collided object
         Destroy(collision.gameObject);
     }
+
+    public int getIronCount() { return ironCount; }
+
+    public int getGoldCount() {  return goldCount; }
+
+    public int getWaterCount() {  return waterCount; }
 }
