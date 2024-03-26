@@ -32,9 +32,6 @@ public class PlayerResources : MonoBehaviour
                 Debug.LogWarning("Unknown resource type collided.");
                 break;
         }
-
-        // Destroy the collided object
-        Destroy(collision.gameObject);
     }
 
     public int getIronCount() { return ironCount; }
