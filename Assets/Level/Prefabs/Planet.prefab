@@ -12,6 +12,8 @@ GameObject:
   - component: {fileID: 8188784681542817399}
   - component: {fileID: 4441641329098330291}
   - component: {fileID: -8064201856164923774}
+  - component: {fileID: 2290424333928924958}
+  - component: {fileID: -7257262460413823968}
   m_Layer: 0
   m_Name: Planet
   m_TagString: Untagged
@@ -98,11 +100,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da8fb644b5d0f3a4083aff1b6c972988, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 0}
+  planet: {fileID: 0}
   attachDistance: 5
   rotationSpeed: 30
   circleInterval: 3
   circlePrefab: {fileID: 7408546873264150091, guid: 0ee5c97afd4b4aa4a9e60c04cf4b24e8, type: 3}
+  resourceType: 0
 --- !u!58 &-8064201856164923774
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -138,3 +141,44 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.5
+--- !u!50 &2290424333928924958
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1587606039838680478}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
+--- !u!114 &-7257262460413823968
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1587606039838680478}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2fadfe0c181d0044bd373efcecd2795, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mass: 3
+  radius: 0
