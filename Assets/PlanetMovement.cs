@@ -30,7 +30,7 @@ public class PlanetMovement : MonoBehaviour
         planet = GetComponent<Rigidbody2D>();
         planet.mass = Random.Range(1f, 4f);
         GetComponent<CircleCollider2D>().radius = planet.mass;
-        transform.localScale = Vector3.one * planet.mass;
+        transform.localScale = Vector3.one * planet.mass * 0.8f;
         collider2 = gameObject.AddComponent<CircleCollider2D>();
     }
 
@@ -58,22 +58,22 @@ public class PlanetMovement : MonoBehaviour
         }
     }
 
-    void AttachToPlayer(GameObject player)
+    private void AttachToPlayer(GameObject player)
     {
         isAttached = true;
         this.player = player;
         transform.SetParent(player.transform);
         planet.velocity = new Vector2(0f, 0f);
-        initialOffset = transform.position - player.transform.position; // Update initial offset
+        transform.position += transform.position.normalized * planet.mass * 0.1f * Random.Range(-1f, 1f);
         rotationSpeed *= Random.Range(0, 2) == 0 ? 1 : -1;
     }
 
-    void RotateAroundPlayer()
+    private void RotateAroundPlayer()
     {
         transform.RotateAround(player.transform.position, Vector3.forward, rotationSpeed * Time.deltaTime);
     }
 
-    void ManageCircleTimer()
+    private void ManageCircleTimer()
     {
         circleTimer += Time.deltaTime;
         if (circleTimer >= circleInterval)
@@ -83,7 +83,7 @@ public class PlanetMovement : MonoBehaviour
         }
     }
 
-    void CreateCircle()
+    private void CreateCircle()
     {
         // Instantiate the circle prefab at the object's position
         GameObject circle = Instantiate(circlePrefab, transform.position, Quaternion.identity);
