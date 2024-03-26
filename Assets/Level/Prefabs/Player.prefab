@@ -174,3 +174,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8426a171f98f34b4dacacfee78f1887d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  planet: {fileID: 4365278090960699839}
+  mainCameraObject: {fileID: 0}
+  sizeIncreaseAmount: 0.5
+  cameraSizeIncrease: 1
+  numberOfPlanets: 5

@@ -13028,11 +13028,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 248617150733090842, guid: 4c1684579543f644bb156ffb23be480e, type: 3}
       propertyPath: spawnWidth
-      value: 100
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 248617150733090842, guid: 4c1684579543f644bb156ffb23be480e, type: 3}
       propertyPath: spawnHeight
-      value: 100
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 369996396090531074, guid: 4c1684579543f644bb156ffb23be480e, type: 3}
       propertyPath: m_Name
