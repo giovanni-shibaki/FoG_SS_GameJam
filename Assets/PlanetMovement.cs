@@ -83,6 +83,7 @@ public class PlanetMovement : MonoBehaviour
 
     public void AttachToPlayer(GameObject player)
     {
+        if (player.GetComponent<PlayerResources>().numberOfPlanets <= 0) return;
         isAttached = true;
         this.player = player;
         transform.SetParent(player.transform);
@@ -91,6 +92,7 @@ public class PlanetMovement : MonoBehaviour
         rotationSpeed *= (Random.Range(0, 2) == 0 ? 1 : -1) * Random.Range(0.1f, planet.mass);
         GetComponent<CircleCollider2D>().isTrigger = true;
         Destroy(gravityCollider);
+        player.GetComponent<PlayerResources>().numberOfPlanets--;
     }
 
     private void RotateAroundPlayer()
