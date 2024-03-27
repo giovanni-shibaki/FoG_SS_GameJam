@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 using Random = UnityEngine.Random;
@@ -24,20 +25,28 @@ public class PlanetMovement : MonoBehaviour
     private bool isAttached = false;
     private Vector3 initialOffset;
     private float circleTimer = 0f;
-    private CircleCollider2D collider2;
-
-    void Awake() {
+    private float escapeVelocity;
+    private CircleCollider2D gravityCollider;
+    
+    void Awake() 
+    {
         planet = GetComponent<Rigidbody2D>();
+        gravityCollider = gameObject.AddComponent<CircleCollider2D>();
+        gravityCollider.isTrigger = true;
+    }
+
+    private void OnEnable() 
+    {
         planet.mass = Random.Range(1f, 4f);
-        GetComponent<CircleCollider2D>().radius = planet.mass;
-        transform.localScale = Vector3.one * planet.mass;
-        collider2 = gameObject.AddComponent<CircleCollider2D>();
+        transform.localScale = Vector3.one * planet.mass * 0.8f;
+        escapeVelocity = planet.mass * 0.5f;
     }
 
     void Start()
     {
         // Calculate initial offset from the player
         resourceType = (ResourceType)Random.Range(0, 3);
+        gravityCollider.radius = planet.mass;
         player = GameObject.FindGameObjectWithTag("Player");
         initialOffset = transform.position - player.transform.position;
     }
@@ -51,29 +60,41 @@ public class PlanetMovement : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D collider) {
-        if (collider.gameObject.CompareTag("Player"))
+    private void OnTriggerEnter2D(Collider2D collision) {
+        if (collision.gameObject.CompareTag("Player"))
         {
-            AttachToPlayer(collider.gameObject);
+            planet.AddForce(planet.velocity * -0.2f * planet.mass, ForceMode2D.Force);
         }
     }
 
-    void AttachToPlayer(GameObject player)
+    void OnTriggerStay2D(Collider2D collision) {
+        if (collision.gameObject.CompareTag("Player") && planet.velocity.magnitude < escapeVelocity)
+        // if (collision.gameObject.CompareTag("Player"))
+        {
+            AttachToPlayer(collision.gameObject);
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision) {
+        if (collision.gameObject.CompareTag("Player")) Destroy(gameObject);
+    }
+
+    public void AttachToPlayer(GameObject player)
     {
         isAttached = true;
         this.player = player;
         transform.SetParent(player.transform);
         planet.velocity = new Vector2(0f, 0f);
-        initialOffset = transform.position - player.transform.position; // Update initial offset
+        transform.position += transform.position.normalized * planet.mass * 0.1f * Random.Range(-1f, 1f);
         rotationSpeed *= Random.Range(0, 2) == 0 ? 1 : -1;
     }
 
-    void RotateAroundPlayer()
+    private void RotateAroundPlayer()
     {
         transform.RotateAround(player.transform.position, Vector3.forward, rotationSpeed * Time.deltaTime);
     }
 
-    void ManageCircleTimer()
+    private void ManageCircleTimer()
     {
         circleTimer += Time.deltaTime;
         if (circleTimer >= circleInterval)
@@ -83,7 +104,7 @@ public class PlanetMovement : MonoBehaviour
         }
     }
 
-    void CreateCircle()
+    private void CreateCircle()
     {
         // Instantiate the circle prefab at the object's position
         GameObject circle = Instantiate(circlePrefab, transform.position, Quaternion.identity);
