@@ -16,7 +16,24 @@ public class SpawnerManager : MonoBehaviour
     public float minSpeed = 1f; // Minimum speed of spawned objects
     public float maxSpeed = 5f; // Maximum speed of spawned objects
 
+    public float minDistanceFromPlayer = 5f; // Minimum distance from the player
+
     private float spawnTimer = 0f;
+    private Transform playerTransform;
+
+    void Start()
+    {
+        // Get the player reference
+        GameObject playerObject = GameObject.FindGameObjectWithTag("Player");
+        if (playerObject != null)
+        {
+            playerTransform = playerObject.transform;
+        }
+        else
+        {
+            Debug.LogError("Player not found. Make sure the player has the 'Player' tag assigned.");
+        }
+    }
 
     void Update()
     {
@@ -34,7 +51,7 @@ public class SpawnerManager : MonoBehaviour
     void SpawnObject()
     {
         // Calculate random position within the spawn area
-        Vector3 spawnPosition = new Vector3(Random.Range(-spawnWidth / 2f, spawnWidth / 2f), Random.Range(-spawnHeight / 2f, spawnHeight / 2f), -1f);
+        Vector3 spawnPosition = CalculateSpawnPosition();
 
         // Instantiate the object at the random position
         GameObject newObject = Instantiate(objectPrefab, spawnPosition, Quaternion.identity);
@@ -50,5 +67,26 @@ public class SpawnerManager : MonoBehaviour
         {
             Debug.LogWarning("Object prefab does not have a Rigidbody2D component.");
         }
+    }
+
+    Vector3 CalculateSpawnPosition()
+    {
+        Vector3 spawnPosition;
+        bool positionValid = false;
+
+        do
+        {
+            // Calculate random position within the spawn area
+            spawnPosition = new Vector3(Random.Range(-spawnWidth / 2f, spawnWidth / 2f), Random.Range(-spawnHeight / 2f, spawnHeight / 2f), -1f);
+
+            // Check if the position is far enough from the player
+            if (Vector3.Distance(spawnPosition, playerTransform.position) >= minDistanceFromPlayer)
+            {
+                positionValid = true;
+            }
+
+        } while (!positionValid);
+
+        return spawnPosition;
     }
 }

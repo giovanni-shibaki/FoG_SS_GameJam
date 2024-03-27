@@ -8,14 +8,34 @@ using Debug = UnityEngine.Debug;
 public class PlayerResources : MonoBehaviour
 {
     public Transform planet; // Reference to the planet GameObject
+    public Camera mainCamera; // Reference to the main camera
 
     public float sizeIncreaseAmount = 0.5f; // Amount to increase the size of the planet
     public float cameraSizeIncrease = 1f; // Amount to increase the camera distance
+    public float speedIncreaseAmount = 1f;
     public int numberOfPlanets = 5;
 
     private int ironCount = 0;
     private int goldCount = 0;
     private int waterCount = 0;
+
+    // Update is called once per frame
+    void Update()
+    {
+        // Check if the player pressed the B, N, or M keys
+        if (Input.GetKeyDown(KeyCode.B))
+        {
+            IncreasePlanetSize();
+        }
+        else if (Input.GetKeyDown(KeyCode.N))
+        {
+            IncreasePlanetSpeed();
+        }
+        else if (Input.GetKeyDown(KeyCode.M))
+        {
+            IncreaseNumberOfPlanets();
+        }
+    }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -23,17 +43,17 @@ public class PlayerResources : MonoBehaviour
         switch (collision.gameObject.tag)
         {
             case "Iron":
-                if(ironCount < 100)
+                if (ironCount < 100)
                     ironCount += 2;
                 Debug.Log("Iron collected. Total iron count: " + ironCount);
                 break;
             case "Gold":
-                if(goldCount < 100)
+                if (goldCount < 100)
                     goldCount += 2;
                 Debug.Log("Gold collected. Total gold count: " + goldCount);
                 break;
             case "Water":
-                if(waterCount < 100)
+                if (waterCount < 100)
                     waterCount += 2;
                 Debug.Log("Water collected. Total water count: " + waterCount);
                 break;
@@ -45,58 +65,13 @@ public class PlayerResources : MonoBehaviour
 
     public int getIronCount() { return ironCount; }
 
-    public int getGoldCount() {  return goldCount; }
+    public int getGoldCount() { return goldCount; }
 
-    public int getWaterCount() {  return waterCount; }
+    public int getWaterCount() { return waterCount; }
 
-    void Update()
+    void IncreasePlanetSize()
     {
-        // Check if the player pressed the B, N, or M keys
-        if (Input.GetKeyDown(KeyCode.B))
-        {
-            UseResource("Iron");
-        }
-        else if (Input.GetKeyDown(KeyCode.N))
-        {
-            UseResource("Gold");
-        }
-        else if (Input.GetKeyDown(KeyCode.M))
-        {
-            UseResource("Water");
-        }
-    }
-
-    void UseResource(string resourceType)
-    {
-        switch (resourceType)
-        {
-            case "Iron":
-                if (this.ironCount > 10)
-                {
-                    this.ironCount -= 10;
-                    IncreasePlanetSize();
-                }
-                break;
-            case "Gold":
-                if (this.goldCount > 10)
-                {
-                    this.goldCount -= 10;
-                    IncreaseCameraSize();
-                }
-                break;
-            case "Water":
-                if (this.waterCount > 10)
-                {
-                    this.waterCount -= 10;
-                    IncreaseNumberOfPlanets();
-                }
-                break;
-            default:
-                Debug.LogWarning("Unknown resource type used.");
-                break;
-        }
-
-        void IncreasePlanetSize()
+        if(ConsumeResources(0.4f, 0.3f, 0.3f))
         {
             // Calculate the scaling factor
             Vector3 scaleChange = new Vector3(sizeIncreaseAmount, sizeIncreaseAmount, 0f);
@@ -108,16 +83,71 @@ public class PlayerResources : MonoBehaviour
             {
                 child.localScale = Vector3.Scale(child.localScale, scaleFactor);
             }
-        }
 
-        void IncreaseCameraSize()
+            // Increase camera size
+            mainCamera.orthographicSize += cameraSizeIncrease;
+        }
+    }
+
+    void IncreasePlanetSpeed()
+    {
+        // Consume resources proportionally
+        if(ConsumeResources(0.3f, 0.3f, 0.4f))
         {
-            Camera.main.orthographicSize += cameraSizeIncrease;
+            // Find the object with the PlayerMovement component
+            GameObject playerObject = GameObject.FindGameObjectWithTag("Player");
+            if (playerObject != null)
+            {
+                PlayerMovement playerMovement = playerObject.GetComponent<PlayerMovement>();
+                if (playerMovement != null)
+                {
+                    // Get the current speed and increase it
+                    float currentSpeed = playerMovement.getSpeed();
+                    float newSpeed = currentSpeed + speedIncreaseAmount;
+                    playerMovement.setSpeed(newSpeed); // Set the new speed
+                }
+                else
+                {
+                    Debug.LogWarning("PlayerMovement component not found on player object.");
+                }
+            }
+            else
+            {
+                Debug.LogWarning("Player object not found.");
+            }
         }
+    }
 
-        void IncreaseNumberOfPlanets()
+    void IncreaseNumberOfPlanets()
+    {
+        // Consume resources proportionally
+        if (ConsumeResources(0.3f, 0.3f, 0.4f))
         {
             this.numberOfPlanets += 2;
+            Debug.Log("Number of planets increased. Total number of planets: " + numberOfPlanets);
         }
+    }
+
+    bool ConsumeResources(float ironProportion, float goldProportion, float waterProportion)
+    {
+        int totalResources = ironCount + goldCount + waterCount;
+
+        // Calculate the amount to consume from each resource
+        int ironToConsume = Mathf.RoundToInt(ironCount * ironProportion);
+        int goldToConsume = Mathf.RoundToInt(goldCount * goldProportion);
+        int waterToConsume = Mathf.RoundToInt(waterCount * waterProportion);
+
+        // Consume resources
+        if(ironCount > ironToConsume && goldCount > goldToConsume && waterCount > waterToConsume)
+        {
+            ironCount -= ironToConsume;
+            goldCount -= goldToConsume;
+            waterCount -= waterToConsume;
+
+            Debug.Log("Resources consumed - Iron: " + ironToConsume + ", Gold: " + goldToConsume + ", Water: " + waterToConsume);
+
+            return true;
+        }
+        return false;
     }
 }
