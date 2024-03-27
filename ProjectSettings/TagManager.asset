@@ -7,6 +7,8 @@ TagManager:
   - Iron
   - Gold
   - Water
+  - HealthBar
+  - Planet
   layers:
   - Default
   - TransparentFX

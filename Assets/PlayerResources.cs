@@ -19,6 +19,10 @@ public class PlayerResources : MonoBehaviour
     private int goldCount = 0;
     private int waterCount = 0;
 
+    private int health = 100;
+
+    private HealthManager healthBarManager;
+
     // Update is called once per frame
     void Update()
     {
@@ -35,6 +39,11 @@ public class PlayerResources : MonoBehaviour
         {
             IncreaseNumberOfPlanets();
         }
+    }
+
+    void Start()
+    {
+        healthBarManager = GameObject.FindGameObjectWithTag("HealthBar").GetComponent<HealthManager>();
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -57,8 +66,12 @@ public class PlayerResources : MonoBehaviour
                     waterCount += 2;
                 Debug.Log("Water collected. Total water count: " + waterCount);
                 break;
+            case "Planet":
+                break;
             default:
                 Debug.LogWarning("Unknown resource type collided.");
+                Rigidbody2D rb = gameObject.GetComponent<Rigidbody2D>();
+                TakeDamage((int)rb.mass*10);
                 break;
         }
     }
@@ -149,5 +162,11 @@ public class PlayerResources : MonoBehaviour
             return true;
         }
         return false;
+    }
+
+    public void TakeDamage(int damage)
+    {
+        health -= damage;
+        healthBarManager.TakeDamage(damage);
     }
 }
