@@ -61,18 +61,19 @@ public class PlanetMovement : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D collision) {
-        if (collision.gameObject.CompareTag("Player"))
-        {
-            planet.AddForce(planet.velocity * -0.2f * planet.mass, ForceMode2D.Force);
-        }
-    }
-
     void OnTriggerStay2D(Collider2D collision) {
-        if (collision.gameObject.CompareTag("Player") && planet.velocity.magnitude < escapeVelocity)
-        // if (collision.gameObject.CompareTag("Player"))
+        if (!collision.gameObject.CompareTag("Player")) return;
+        if (isAttached) return;
+        
+        if (planet.velocity.magnitude < escapeVelocity)
         {
             AttachToPlayer(collision.gameObject);
+        }
+        else
+        {
+            transform.position = Vector3.MoveTowards(transform.position, player.transform.position, 
+                planet.mass * 1f * Time.deltaTime);
+            planet.velocity /= 1.005f;
         }
     }
 
@@ -87,7 +88,9 @@ public class PlanetMovement : MonoBehaviour
         transform.SetParent(player.transform);
         planet.velocity = new Vector2(0f, 0f);
         transform.position += transform.position.normalized * planet.mass * 0.1f * Random.Range(-1f, 1f);
-        rotationSpeed *= Random.Range(0, 2) == 0 ? 1 : -1;
+        rotationSpeed *= (Random.Range(0, 2) == 0 ? 1 : -1) * Random.Range(0.1f, planet.mass);
+        GetComponent<CircleCollider2D>().isTrigger = true;
+        Destroy(gravityCollider);
     }
 
     private void RotateAroundPlayer()
