@@ -15,6 +15,9 @@ public class PlayerResources : MonoBehaviour
     public float speedIncreaseAmount = 1f;
     public int numberOfPlanets = 5;
 
+    public AudioClip resourcePickup;
+    public AudioClip planetDestroy;
+
     private int ironCount = 0;
     private int goldCount = 0;
     private int waterCount = 0;
@@ -55,16 +58,22 @@ public class PlayerResources : MonoBehaviour
                 if (ironCount < 100)
                     ironCount += 2;
                 Debug.Log("Iron collected. Total iron count: " + ironCount);
+                GetComponent<AudioSource>().clip = resourcePickup;
+                GetComponent<AudioSource>().Play();
                 break;
             case "Gold":
                 if (goldCount < 100)
                     goldCount += 2;
                 Debug.Log("Gold collected. Total gold count: " + goldCount);
+                GetComponent<AudioSource>().clip = resourcePickup;
+                GetComponent<AudioSource>().Play();
                 break;
             case "Water":
                 if (waterCount < 100)
                     waterCount += 2;
                 Debug.Log("Water collected. Total water count: " + waterCount);
+                GetComponent<AudioSource>().clip = resourcePickup;
+                GetComponent<AudioSource>().Play();
                 break;
             case "Planet":
                 break;

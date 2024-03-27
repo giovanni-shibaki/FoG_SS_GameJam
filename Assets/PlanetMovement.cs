@@ -93,6 +93,7 @@ public class PlanetMovement : MonoBehaviour
         GetComponent<CircleCollider2D>().isTrigger = true;
         Destroy(gravityCollider);
         player.GetComponent<PlayerResources>().numberOfPlanets--;
+        GetComponent<AudioSource>().Play();
     }
 
     private void RotateAroundPlayer()

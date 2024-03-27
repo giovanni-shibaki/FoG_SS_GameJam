@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Security.Cryptography;
@@ -20,7 +21,7 @@ public class CircleMovement : MonoBehaviour
             Destroy(gameObject);
         }
     }
-
+    
     public void SetPlayer(GameObject player)
     {
         this.player = player;
