@@ -22,7 +22,7 @@ public class PlayerResources : MonoBehaviour
     private int goldCount = 0;
     private int waterCount = 0;
 
-    private int health = 100;
+    public int health = 100;
 
     private HealthManager healthBarManager;
 
@@ -177,5 +177,17 @@ public class PlayerResources : MonoBehaviour
     {
         health -= damage;
         healthBarManager.TakeDamage(damage);
+
+        if(health <= 0)
+        {
+            Transform objTransform = GameObject.FindGameObjectWithTag("GameOver").transform;
+
+            // Get the current position
+            Vector3 newPosition = objTransform.position;
+            newPosition.x = 960;
+
+            // Assign the modified position back to the Transform
+            objTransform.position = newPosition;
+        }
     }
 }

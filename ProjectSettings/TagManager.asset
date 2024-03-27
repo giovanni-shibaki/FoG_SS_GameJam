@@ -9,6 +9,7 @@ TagManager:
   - Water
   - HealthBar
   - Planet
+  - GameOver
   layers:
   - Default
   - TransparentFX
