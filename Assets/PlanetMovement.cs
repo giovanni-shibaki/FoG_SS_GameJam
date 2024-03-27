@@ -49,6 +49,7 @@ public class PlanetMovement : MonoBehaviour
         gravityCollider.radius = planet.mass;
         player = GameObject.FindGameObjectWithTag("Player");
         initialOffset = transform.position - player.transform.position;
+        circleInterval = Random.Range(1f, 4f);
     }
 
     void Update()
